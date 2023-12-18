@@ -49,8 +49,8 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# Цвета фона - черный.
-BOARD_BACKGROUND_COLOR = (0, 0, 0)
+# Цвета фона - светло-серый.
+BOARD_BACKGROUND_COLOR = (211, 211, 211)
 
 # Цвет яблока - красный.
 APPLE_COLOR = (255, 0, 0)
@@ -72,6 +72,8 @@ SPEED = 5
 
 # Настройка игрового окна.
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+screen.fill(BOARD_BACKGROUND_COLOR)
+pg.display.flip()
 
 # Заголовок окна игрового поля.
 pg.display.set_caption("Змейка")
