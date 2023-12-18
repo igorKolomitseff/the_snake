@@ -59,8 +59,7 @@ APPLE_COLOR = (255, 0, 0)
 WRONG_PRODUCT_COLOR = (255, 165, 0)
 
 # Цвет змейки - зелёный.
-SNAKE_COLOR = (0, 255, 0)
-
+SNAKE_COLOR = (76, 187, 23)
 
 # Центральная точка экрана.
 CENTER_SCREEN_POINT = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
