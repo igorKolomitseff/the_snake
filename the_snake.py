@@ -357,6 +357,10 @@ def handle_keys(game_object: Snake) -> None:
             elif event.key == pg.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
 
+            # Выход из игры по клавише ESC.
+            elif event.key == pg.K_ESCAPE:
+                pg.quit()
+
 
 def set_randomize_position(game_product: Union[Apple, WrongProduct],
                            game_object: Snake) -> None:
