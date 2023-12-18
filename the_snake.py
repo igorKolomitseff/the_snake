@@ -61,8 +61,6 @@ WRONG_PRODUCT_COLOR = (255, 165, 0)
 # Цвет змейки - зелёный.
 SNAKE_COLOR = (0, 255, 0)
 
-# Изначальная длина змейки.
-INITIAL_SNAKE_LENGTH = 1
 
 # Центральная точка экрана.
 CENTER_SCREEN_POINT = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
@@ -229,7 +227,7 @@ class Snake(GameObject):
     def __init__(self) -> None:
         """Инициализирует объект класса."""
         super().__init__()
-        self.length: int = INITIAL_SNAKE_LENGTH
+        self.length: int = 1
         self.positions: list[tuple[int, int]] = [self.position]
         self.direction: tuple[int, int] = RIGHT
         self.next_direction: Optional[tuple[int, int]] = None
@@ -322,7 +320,7 @@ class Snake(GameObject):
         с собой.
         """
         # Сброс длины змейки.
-        self.length = INITIAL_SNAKE_LENGTH
+        self.length = 1
 
         # Сброс позиций змейки.
         self.position = CENTER_SCREEN_POINT
