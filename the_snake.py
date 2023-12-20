@@ -163,6 +163,9 @@ class Snake(GameObject):
             списка positions) в центре экрана.
         direction: Направление движения объекта "Змейка". Инициализируется
             кортежем, содержащим численное представление направления движения.
+        next_direction: Следующее направление движения, которое будет применено
+            после обработки нажатия клавиши. Определяется внешней функцией
+            handle_keys.
         speed: Скорость движения объекта "Змейка". Инициализируется
             значением 5.
         max_length: Максимальная величина змейки за игру. Инициализируется
@@ -175,7 +178,6 @@ class Snake(GameObject):
             positions) объекта "Змейка".
         move: Обновляет позицию объекта "Змейка".
         update_direction: Обновляет направление движения объекта "Змейка".
-        update_speed: Обновляет скорость движения объекта "Змейка".
         update_max_length: Обновляет максимальную длину объекта "Змейка" за
             игру.
         reset: Сбрасывает объект "Змейка" в начальное состояние после
@@ -190,6 +192,7 @@ class Snake(GameObject):
         self.positions: list[tuple[int, int]]
         self.direction: tuple[int, int]
         self.length, self.positions, self.direction = self.reset()
+        self.next_direction: Optional[tuple[int, int]] = None
         self.speed = 5
         self.max_length = 1
         self.last: Optional[tuple[int, int]] = None
@@ -234,23 +237,11 @@ class Snake(GameObject):
             # Удаление последнего элемента змейки
             self.last = self.positions.pop()
 
-    def update_direction(self, event_key: int) -> None:
-        """Обновляет направление движения объекта "Змейка".
-
-        Параметры:
-            event_key: Клавиша клавиатуры.
-
-        """
-        self.direction = NEW_DIRECTION.get(
-            (self.direction, event_key), self.direction)
-
-    def update_speed(self, event_key: int) -> None:
-        """Обновляет скорость движения объекта "Змейка".
-
-        Параметры:
-            event_key: Клавиша клавиатуры.
-        """
-        self.speed = SNAKE_SPEED.get(event_key, self.speed)
+    def update_direction(self) -> None:
+        """Обновляет направление движения объекта "Змейка"."""
+        if self.next_direction:
+            self.direction = self.next_direction
+            self.next_direction = None
 
     def update_max_length(self):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
@@ -358,18 +349,19 @@ def handle_keys(snake_object: Snake) -> None:
             pg.quit()
 
         elif event.type == pg.KEYDOWN:
-
-            # Обновление направления движения змейки.
-            if (snake_object.direction, event.key) in NEW_DIRECTION.keys():
-                snake_object.update_direction(event.key)
-
-            # Обновление скорости движения змейки.
-            if event.key in SNAKE_SPEED.keys():
-                snake_object.update_speed(event.key)
-
             # Выход из игры по клавише ESC.
             if event.key == pg.K_ESCAPE:
                 pg.quit()
+
+            # Определение нового направления движения змейки.
+            snake_object.next_direction = NEW_DIRECTION.get(
+                (snake_object.direction, event.key))
+
+            # Обновление скорости движения змейки.
+            snake_object.speed = SNAKE_SPEED.get(event.key, snake_object.speed)
+
+    # Обновление направления движения змейки.
+    snake_object.update_direction()
 
 
 def main():
