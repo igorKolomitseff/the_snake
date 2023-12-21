@@ -197,18 +197,12 @@ class Snake(GameObject):
         self.direction: tuple[int, int] = choice((UP, DOWN, RIGHT, LEFT))
 
     def get_head_position(self) -> tuple[int, int]:
-        """Возвращает позицию головы объекта "Змейка".
-
-        Возвращает:
-            Кортеж с координатами текущей позиции головы объекта "Змейка"
-        """
+        """Возвращает позицию головы объекта "Змейка"."""
         return self.positions[0]
 
     def move(self) -> None:
         """Обновляет позицию объекта "Змейка"."""
-        # Текущее положение головы.
         current_head_position = self.get_head_position()
-
         # Определение новой позиции головы.
         next_head_position = (
             (current_head_position[0] + self.direction[0] * GRID_SIZE)
@@ -216,24 +210,17 @@ class Snake(GameObject):
             (current_head_position[1] + self.direction[1] * GRID_SIZE)
             % SCREEN_HEIGHT
         )
-
         # Проверка на столкновение с собой.
         if next_head_position in self.positions:
-            # Обновление максимальной длины змейки.
             self.update_max_length()
-            # Сброс змейки.
             self.reset()
-
             # Очистка экрана.
             screen.fill(BOARD_BACKGROUND_COLOR)
-
         # Обновление списка позиций.
         else:
             self.positions.insert(0, next_head_position)
-
         # Проверка текущей длины змеи
         if len(self.positions) > self.length:
-            # Удаление последнего элемента змейки
             self.last = self.positions.pop()
 
     def update_direction(self) -> None:
@@ -246,7 +233,7 @@ class Snake(GameObject):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
         if self.max_length < self.length:
             self.max_length = self.length
-    
+
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
         self.draw_cell(self.get_head_position())
@@ -287,7 +274,6 @@ class Apple(GameObject):
             # (размер сетки - 1).
             random_width = (randint(0, GRID_WIDTH - 1) * GRID_SIZE)
             random_height = (randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
-
             if (random_width, random_height) not in occupied_positions:
                 self.position = (random_width, random_height)
                 break
@@ -319,19 +305,15 @@ def handle_keys(snake_object: Snake) -> None:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
-
         elif event.type == pg.KEYDOWN:
             # Выход из игры по клавише ESC.
             if event.key == pg.K_ESCAPE:
                 pg.quit()
-
             # Определение нового направления движения змейки.
             snake_object.next_direction = NEW_DIRECTION.get(
                 (snake_object.direction, event.key))
-
             # Обновление скорости движения змейки.
             snake_object.speed = SNAKE_SPEED.get(event.key, snake_object.speed)
-
     # Обновление направления движения змейки.
     snake_object.update_direction()
 
@@ -349,52 +331,30 @@ def main():
     while True:
         # Замедление скорости движения змейки до SPEED раз в секунду.
         clock.tick(snake.speed)
-
         # Заголовок окна игрового поля.
         # Информация обновляется каждую итерацию.
         pg.display.set_caption(f'ЗМЕЙКА.  Макс. длина: {snake.max_length}. '
                                f'Скорость: {snake.speed} (Клав. 1 - 9) | '
                                f'(Выход: ESC)')
-
         # Обработка нажатий клавиш.
         handle_keys(snake)
-
         # Проверка, съедено ли яблоко.
         if snake.get_head_position() == apple.position:
-            # Увеличение длины змейки.
             snake.length += 1
-
-            # Изменение положения яблока на игровом поле.
             apple.randomize_position(snake.positions
                                      + [wrong_product.position])
-
         # Проверка, съеден ли неправильный продукт.
         elif snake.get_head_position() == wrong_product.position:
-            # Обновление максимальной длины змейки.
             snake.update_max_length()
-
-            # Сброс змейки.
             snake.reset()
-
-            # Изменение положения неправильного продукта на игровом поле.
             wrong_product.randomize_position(snake.positions
                                              + [apple.position])
-
             # Очистка экрана.
             screen.fill(BOARD_BACKGROUND_COLOR)
-
-        # Движение змейки.
         snake.move()
-
-        # Отображение яблока.
         apple.draw()
-
-        # Отображение неправильного продукта.
         wrong_product.draw()
-
-        # Отображение головы змейки.
         snake.draw()
-
         # Затирание старой позиции хвоста змейки.
         snake.draw_cell(snake.last,
                         cell_color=BOARD_BACKGROUND_COLOR)
