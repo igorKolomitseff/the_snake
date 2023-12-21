@@ -180,14 +180,17 @@ class Snake(GameObject):
                  body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует объект класса."""
         super().__init__(body_color)
-        self.length: int
-        self.positions: list[tuple[int, int]]
-        self.direction: tuple[int, int]
-        self.length, self.positions, self.direction = self.reset()
+        self.reset()
         self.next_direction: Optional[tuple[int, int]] = None
         self.speed = 5
         self.max_length = 1
         self.last: Optional[tuple[int, int]] = None
+
+    def reset(self) -> None:
+        """Сбрасывает объект "Змейка" в начальное состояние."""
+        self.length = 1
+        self.positions: list[tuple[int, int]] = [self.position]
+        self.direction: tuple[int, int] = choice((UP, DOWN, RIGHT, LEFT))
 
     def get_head_position(self) -> tuple[int, int]:
         """Возвращает позицию головы объекта "Змейка".
@@ -239,18 +242,6 @@ class Snake(GameObject):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
         if self.max_length < self.length:
             self.max_length = self.length
-
-    def reset(self) -> tuple[int, list[tuple[int, int]], tuple[int, int]]:
-        """Сбрасывает объект "Змейка" в начальное состояние.
-
-        Возвращает:
-            Кортеж данных.
-        """
-        self.length = 1
-        self.positions = [self.position]
-        self.direction = choice((UP, DOWN, RIGHT, LEFT))
-
-        return self.length, self.positions, self.direction
 
 
 class Apple(GameObject):
