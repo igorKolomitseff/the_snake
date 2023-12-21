@@ -84,7 +84,7 @@ SNAKE_SPEED = {
 BOARD_BACKGROUND_COLOR = (211, 211, 211)
 
 # Цвет границы ячейки.
-CELL_BOUNDARY_COLOR = (93, 216, 228)
+CELL_BOUNDARY_COLOR = (93, 216, 228) 
 
 # Цвет яблока - красный.
 APPLE_COLOR = (255, 0, 0)
@@ -116,32 +116,36 @@ class GameObject:
         body_color: Цвет объекта. По умолчанию - BOARD_BACKGROUND_COLOR.
 
     Методы:
-        draw: Отрисовывает объект на экране.
+        draw_cell: Отрисовывает ячейку объекта на экране.
+        draw: Отрисовывает объект на экране. Переопределяется в дочерних
+            классах.
     """
 
     def __init__(self,
-                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
+                 body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует атрибуты класса."""
         self.position: tuple[int, int] = CENTER_SCREEN_POINT
-        self.body_color: tuple[int, int, int] = body_color
+        self.body_color: tuple[int, ...] = body_color
 
-    def draw(self, position: tuple[int, int], surface: pg.Surface = screen,
-             cell_color: Optional[tuple[int, int, int]] = None,
-             cell_boundary_color: tuple[int, int, int] = CELL_BOUNDARY_COLOR) -> None:
-        """Отрисовывает объект на экране.
+    def draw_cell(self, position: tuple[int, int],
+                  cell_color: Optional[tuple[int, ...]] = None) -> None:
+        """Отрисовывает ячейку объекта на экране.
 
         Параметры:
             position: Позиция объекта на игровом поле.
-            surface: Игровое окно.
-            cell_color: Цвет игрового объекта.
-            cell_boundary_color: Цвет границы ячейки игрового объекта.
+            cell_color: Цвет ячейки.
         """
+        cell_boundary_color = cell_color if cell_color else CELL_BOUNDARY_COLOR
         cell_color = cell_color or self.body_color
         rect = pg.Rect(
             (position[0], position[1]), (GRID_SIZE, GRID_SIZE)
         )
-        pg.draw.rect(surface, cell_color, rect)
-        pg.draw.rect(surface, cell_boundary_color, rect, 1)
+        pg.draw.rect(screen, cell_color, rect)
+        pg.draw.rect(screen, cell_boundary_color, rect, 1)
+
+    def draw(self) -> None:
+        """Отрисовывает объект на экране."""
+        ...
 
 
 class Snake(GameObject):
@@ -177,7 +181,7 @@ class Snake(GameObject):
     """
 
     def __init__(self,
-                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
+                 body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует объект класса."""
         super().__init__(body_color)
         self.reset()
@@ -242,6 +246,10 @@ class Snake(GameObject):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
         if self.max_length < self.length:
             self.max_length = self.length
+    
+    def draw(self) -> None:
+        """Отрисовывает объект на экране."""
+        self.draw_cell(self.get_head_position())
 
 
 class Apple(GameObject):
@@ -258,7 +266,7 @@ class Apple(GameObject):
     """
 
     def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
-                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
+                 body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует объект класса."""
         super().__init__(body_color)
         self.randomize_position(occupied_positions)
@@ -283,6 +291,10 @@ class Apple(GameObject):
             if (random_width, random_height) not in occupied_positions:
                 self.position = (random_width, random_height)
                 break
+    
+    def draw(self) -> None:
+        """Отрисовывает объект на экране."""
+        self.draw_cell(self.position)
 
 
 class WrongProduct(Apple):
@@ -291,7 +303,7 @@ class WrongProduct(Apple):
     """
 
     def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
-                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
+                 body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует объект класса."""
         super().__init__(occupied_positions, body_color)
 
@@ -375,18 +387,17 @@ def main():
         snake.move()
 
         # Отображение яблока.
-        apple.draw(position=apple.position)
+        apple.draw()
 
         # Отображение неправильного продукта.
-        wrong_product.draw(position=wrong_product.position)
+        wrong_product.draw()
 
         # Отображение головы змейки.
-        snake.draw(position=snake.get_head_position())
+        snake.draw()
 
         # Затирание старой позиции хвоста змейки.
-        snake.draw(position=snake.last,
-                   cell_color=BOARD_BACKGROUND_COLOR,
-                   cell_boundary_color=BOARD_BACKGROUND_COLOR)
+        snake.draw_cell(snake.last,
+                        cell_color=BOARD_BACKGROUND_COLOR)
 
         # Обновление дисплея.
         pg.display.update()
