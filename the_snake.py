@@ -255,27 +255,20 @@ class Apple(GameObject):
     Методы:
         randomize_position: Устанавливает случайное положение объекта-продукта
             на игровом поле.
-        update_randomize_position: Обновляет положение объекта-продукта на
-            игровом поле.
     """
 
     def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
                  body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
-        # Применяются параметры со значением по умолчанию
-        # из-за тестов Практикума.
         """Инициализирует объект класса."""
         super().__init__(body_color)
-        self.position: tuple[int, int] = self.randomize_position(occupied_positions)
+        self.randomize_position(occupied_positions)
 
     def randomize_position(self,
-                           occupied_positions: list[tuple[int, int]]) -> tuple[int, int]:
+                           occupied_positions: list[tuple[int, int]]) -> None:
         """Устанавливает случайное положение объекта-продукта на игровом поле.
 
         Параметры:
             occupied_positions: Занятые ячейки.
-
-        Возвращает:
-            Кортеж координат объекта-продукта.
         """
         while True:
             # Под координатами в данном случае подразумеваются координаты
@@ -288,18 +281,8 @@ class Apple(GameObject):
             random_height = (randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
 
             if (random_width, random_height) not in occupied_positions:
+                self.position = (random_width, random_height)
                 break
-
-        return (random_width, random_height)
-
-    def update_randomize_position(self,
-                               occupied_positions: list[tuple[int, int]]) -> None:
-        """Обновляет положение объекта "Яблоко" на игровом поле.
-
-        Параметры:
-            occupied_positions: Занятые позиции.
-        """
-        self.position = self.randomize_position(occupied_positions)
 
 
 class WrongProduct(Apple):
@@ -370,8 +353,8 @@ def main():
             snake.length += 1
 
             # Изменение положения яблока на игровом поле.
-            apple.update_randomize_position(snake.positions
-                                            + [wrong_product.position])
+            apple.randomize_position(snake.positions
+                                     + [wrong_product.position])
 
         # Проверка, съеден ли неправильный продукт.
         elif snake.get_head_position() == wrong_product.position:
@@ -382,8 +365,8 @@ def main():
             snake.reset()
 
             # Изменение положения неправильного продукта на игровом поле.
-            wrong_product.update_randomize_position(snake.positions
-                                                    + [apple.position])
+            wrong_product.randomize_position(snake.positions
+                                             + [apple.position])
 
             # Очистка экрана.
             screen.fill(BOARD_BACKGROUND_COLOR)
