@@ -145,7 +145,7 @@ class GameObject:
 
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
-        ...
+        raise AttributeError('Game object has no attribute draw')
 
 
 class Snake(GameObject):
