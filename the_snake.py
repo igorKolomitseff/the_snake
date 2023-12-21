@@ -246,13 +246,8 @@ class Snake(GameObject):
         Возвращает:
             Кортеж данных.
         """
-        # Сброс длины змейки.
         self.length = 1
-
-        # Сброс позиций змейки.
         self.positions = [self.position]
-
-        # Изменение направления движения змейки.
         self.direction = choice((UP, DOWN, RIGHT, LEFT))
 
         return self.length, self.positions, self.direction
@@ -291,7 +286,6 @@ class Apple(GameObject):
         Возвращает:
             Кортеж координат объекта-продукта.
         """
-        # Определение случайных координат по ширине и высоте окна.
         while True:
             # Под координатами в данном случае подразумеваются координаты
             # верхнего левого угла ячейки. Функция randint выбирает случайное
