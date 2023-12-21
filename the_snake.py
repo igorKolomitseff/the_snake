@@ -84,7 +84,7 @@ SNAKE_SPEED = {
 BOARD_BACKGROUND_COLOR = (211, 211, 211)
 
 # Цвет границы ячейки.
-CELL_BOUNDARY_COLOR = (93, 216, 228) 
+CELL_BOUNDARY_COLOR = (93, 216, 228)
 
 # Цвет яблока - красный.
 APPLE_COLOR = (255, 0, 0)
@@ -168,6 +168,7 @@ class Snake(GameObject):
             значением 1.
         last: Позиция последнего сегмента объекта "Змейка" (последнего элемента
             списка positions). Инициализируется значением None.
+        reset_situation: Проверка сброса объекта "Змейка".
 
     Методы:
         get_head_position: Возвращает позицию головы (первого элемента списка
@@ -189,6 +190,7 @@ class Snake(GameObject):
         self.speed = 5
         self.max_length = 1
         self.last: Optional[tuple[int, int]] = None
+        self.reset_situation = False
 
     def reset(self) -> None:
         """Сбрасывает объект "Змейка" в начальное состояние."""
@@ -212,10 +214,7 @@ class Snake(GameObject):
         )
         # Проверка на столкновение с собой.
         if next_head_position in self.positions:
-            self.update_max_length()
-            self.reset()
-            # Очистка экрана.
-            screen.fill(BOARD_BACKGROUND_COLOR)
+            self.reset_situation = True
         # Обновление списка позиций.
         else:
             self.positions.insert(0, next_head_position)
@@ -277,7 +276,7 @@ class Apple(GameObject):
             if (random_width, random_height) not in occupied_positions:
                 self.position = (random_width, random_height)
                 break
-    
+
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
         self.draw_cell(self.position)
@@ -327,7 +326,6 @@ def main():
     wrong_product = WrongProduct(occupied_positions=(snake.positions
                                                      + [apple.position]),
                                  body_color=WRONG_PRODUCT_COLOR)
-
     while True:
         # Замедление скорости движения змейки до SPEED раз в секунду.
         clock.tick(snake.speed)
@@ -345,12 +343,15 @@ def main():
                                      + [wrong_product.position])
         # Проверка, съеден ли неправильный продукт.
         elif snake.get_head_position() == wrong_product.position:
-            snake.update_max_length()
-            snake.reset()
+            snake.reset_situation = True
             wrong_product.randomize_position(snake.positions
                                              + [apple.position])
-            # Очистка экрана.
+        # Проверка, должна ли быть сброшена змейка.
+        if snake.reset_situation is True:
+            snake.update_max_length()
+            snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
+            snake.reset_situation = False
         snake.move()
         apple.draw()
         wrong_product.draw()
@@ -358,7 +359,6 @@ def main():
         # Затирание старой позиции хвоста змейки.
         snake.draw_cell(snake.last,
                         cell_color=BOARD_BACKGROUND_COLOR)
-
         # Обновление дисплея.
         pg.display.update()
 
