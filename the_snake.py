@@ -120,22 +120,14 @@ class GameObject:
     """
 
     def __init__(self,
-                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:  # noqa E501
-        # Значение цвета объекта задаётся в инициализаторе по умолчанию.
-        # Иначе тесты от Практикума будут падать.
-        # Аналогично с дочерними классами.
-        # Можно указать None, но тогда функция rect в функции draw будет
-        # придираться к аннотации, так как она ожидает кортеж, но никак
-        # не None. Это видно только при проверке типов с помощью MyPy.
-        # Но на проверку pytest и flake8 от Практикума это никак
-        # не влияет, всё проходит без ошибок.
+                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует атрибуты класса."""
         self.position: tuple[int, int] = CENTER_SCREEN_POINT
         self.body_color: tuple[int, int, int] = body_color
 
     def draw(self, position: tuple[int, int], surface: pg.Surface = screen,
              cell_color: Optional[tuple[int, int, int]] = None,
-             cell_boundary_color: tuple[int, int, int] = CELL_BOUNDARY_COLOR) -> None:  # noqa E501
+             cell_boundary_color: tuple[int, int, int] = CELL_BOUNDARY_COLOR) -> None:
         """Отрисовывает объект на экране.
 
         Параметры:
@@ -185,7 +177,7 @@ class Snake(GameObject):
     """
 
     def __init__(self,
-                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:  # noqa E501
+                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует объект класса."""
         super().__init__(body_color)
         self.length: int
@@ -281,16 +273,16 @@ class Apple(GameObject):
             игровом поле.
     """
 
-    def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],  # noqa E501
-                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:  # noqa E501
+    def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
+                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
         # Применяются параметры со значением по умолчанию
         # из-за тестов Практикума.
         """Инициализирует объект класса."""
         super().__init__(body_color)
-        self.position: tuple[int, int] = self.randomize_position(occupied_positions)  # noqa E501
+        self.position: tuple[int, int] = self.randomize_position(occupied_positions)
 
     def randomize_position(self,
-                           occupied_positions: list[tuple[int, int]]) -> tuple[int, int]:  # noqa E501
+                           occupied_positions: list[tuple[int, int]]) -> tuple[int, int]:
         """Устанавливает случайное положение объекта-продукта на игровом поле.
 
         Параметры:
@@ -316,7 +308,7 @@ class Apple(GameObject):
         return (random_width, random_height)
 
     def update_randomize_position(self,
-                               occupied_positions: list[tuple[int, int]]) -> None:    # noqa E501
+                               occupied_positions: list[tuple[int, int]]) -> None:
         """Обновляет положение объекта "Яблоко" на игровом поле.
 
         Параметры:
@@ -330,8 +322,8 @@ class WrongProduct(Apple):
     Наследуется от класса Apple.
     """
 
-    def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],  # noqa E501
-                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:  # noqa E501
+    def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
+                 body_color: tuple[int, int, int] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует объект класса."""
         super().__init__(occupied_positions, body_color)
 
