@@ -251,18 +251,19 @@ class Apple(GameObject):
             на игровом поле.
     """
 
-    def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
+    def __init__(self,
+                 hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
                  body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует объект класса."""
         super().__init__(body_color)
-        self.randomize_position(occupied_positions)
+        self.randomize_position(hold_positions)
 
     def randomize_position(self,
-                           occupied_positions: list[tuple[int, int]]) -> None:
+                           hold_positions: list[tuple[int, int]]) -> None:
         """Устанавливает случайное положение объекта-продукта на игровом поле.
 
         Параметры:
-            occupied_positions: Занятые ячейки.
+            hold_positions: Занятые ячейки.
         """
         while True:
             # Под координатами в данном случае подразумеваются координаты
@@ -273,7 +274,7 @@ class Apple(GameObject):
             # (размер сетки - 1).
             random_width = (randint(0, GRID_WIDTH - 1) * GRID_SIZE)
             random_height = (randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
-            if (random_width, random_height) not in occupied_positions:
+            if (random_width, random_height) not in hold_positions:
                 self.position = (random_width, random_height)
                 break
 
@@ -287,10 +288,11 @@ class WrongProduct(Apple):
     Наследуется от класса Apple.
     """
 
-    def __init__(self, occupied_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
+    def __init__(self,
+                 hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
                  body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
         """Инициализирует объект класса."""
-        super().__init__(occupied_positions, body_color)
+        super().__init__(hold_positions, body_color)
 
 
 def handle_keys(snake_object: Snake) -> None:
@@ -321,10 +323,10 @@ def main():
     """Запускает игру "Змейка"."""
     # Инициализация объектов классов.
     snake = Snake(body_color=SNAKE_COLOR)
-    apple = Apple(occupied_positions=snake.positions,
+    apple = Apple(hold_positions=snake.positions,
                   body_color=APPLE_COLOR)
-    wrong_product = WrongProduct(occupied_positions=(snake.positions
-                                                     + [apple.position]),
+    wrong_product = WrongProduct(hold_positions=(snake.positions
+                                                 + [apple.position]),
                                  body_color=WRONG_PRODUCT_COLOR)
     while True:
         # Замедление скорости движения змейки до SPEED раз в секунду.
