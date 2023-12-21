@@ -230,8 +230,7 @@ class Snake(GameObject):
 
     def update_max_length(self):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
-        if self.max_length < self.length:
-            self.max_length = self.length
+        self.max_length = max(self.length, self.max_length)
 
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
