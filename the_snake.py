@@ -231,6 +231,9 @@ class Snake(GameObject):
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
         self.draw_cell(self.get_head_position())
+        # Затирание старой позиции хвоста змейки.
+        self.draw_cell(self.last,
+                       cell_color=BOARD_BACKGROUND_COLOR)
 
 
 class Apple(GameObject):
@@ -344,9 +347,6 @@ def main():
         apple.draw()
         wrong_product.draw()
         snake.draw()
-        # Затирание старой позиции хвоста змейки.
-        snake.draw_cell(snake.last,
-                        cell_color=BOARD_BACKGROUND_COLOR)
         # Обновление дисплея.
         pg.display.update()
 
