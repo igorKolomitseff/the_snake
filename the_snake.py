@@ -73,8 +73,9 @@ NEW_DIRECTION = {
     (DOWN, pg.K_RIGHT): RIGHT
 }
 
+# Настройка скорости движения змейки.
 MIN_SPEED = 5
-MAX_SPEED = 50
+MAX_SPEED = 30
 
 # Словарь с привязкой цифровых клавиш клавиатуры
 # к изменению (уменьшению или увеличению) скорости движения змейки.
@@ -162,6 +163,7 @@ class Snake(GameObject):
         last: Позиция последнего сегмента объекта "Змейка" (последнего элемента
             списка positions). Инициализируется значением None.
         reset_situation: Проверка сброса объекта "Змейка".
+        update_information: Проверка необходимости обновления информации.
     """
 
     def __init__(self,
@@ -172,6 +174,7 @@ class Snake(GameObject):
         self.max_length = 1
         self.last: Optional[tuple[int, int]] = None
         self.reset_situation = False
+        self.update_information = False
 
     def reset(self) -> None:
         """Сбрасывает объект "Змейка" в начальное состояние."""
@@ -306,6 +309,7 @@ def handle_keys(snake_object: Snake) -> None:
             if event.key in (pg.K_LSHIFT, pg.K_LCTRL):
                 speed_change = SNAKE_SPEED.get(event.key, 0)
                 snake_object.update_speed(speed_change)
+                snake_object.update_information = True
 
 
 def main():
@@ -315,13 +319,18 @@ def main():
     apple = Apple(hold_positions=snake.positions)
     wrong_product = WrongProduct(hold_positions=(snake.positions
                                                  + [apple.position]))
+    
+    # Заголовок окна игрового поля.
+    pg.display.set_caption(TITLE.format(max_length=snake.max_length,
+                                        speed=snake.speed))
     while True:
         # Замедление скорости движения змейки до SPEED раз в секунду.
         clock.tick(snake.speed)
-        # Заголовок окна игрового поля.
-        # Информация обновляется каждую итерацию.
-        pg.display.set_caption(TITLE.format(max_length=snake.max_length,
-                                            speed=snake.speed))
+        # Проверка, нужно ли обновлять информацию
+        if snake.update_information:
+            pg.display.set_caption(TITLE.format(max_length=snake.max_length,
+                                                speed=snake.speed))
+            snake.update_information = False
         # Обработка нажатий клавиш.
         handle_keys(snake)
         # Проверка, съедено ли яблоко.
@@ -330,6 +339,7 @@ def main():
             snake.update_max_length()
             apple.randomize_position(snake.positions
                                      + [wrong_product.position])
+            snake.update_information = True
         # Проверка, съеден ли неправильный продукт.
         elif snake.get_head_position() == wrong_product.position:
             snake.reset_situation = True
