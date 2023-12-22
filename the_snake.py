@@ -229,7 +229,7 @@ class Snake(GameObject):
         self.max_length = max(self.length, self.max_length)
 
     def draw(self) -> None:
-        """Отрисовывает объект на экране."""
+        """Отрисовывает объект "Змейка" на экране."""
         self.draw_cell(self.get_head_position())
         # Затирание старой позиции хвоста змейки.
         self.draw_cell(self.last,
@@ -266,7 +266,7 @@ class Apple(GameObject):
                 return
 
     def draw(self) -> None:
-        """Отрисовывает объект на экране."""
+        """Отрисовывает объект-продукт на экране."""
         self.draw_cell(self.position)
 
 
