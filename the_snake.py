@@ -136,7 +136,7 @@ class GameObject:
             cell_color: Цвет ячейки.
         """
         cell_boundary_color = cell_color if cell_color else CELL_BOUNDARY_COLOR
-        cell_color = cell_color or self.body_color
+        cell_color = cell_color if cell_color else self.body_color
         rect = pg.Rect(
             (position[0], position[1]), (GRID_SIZE, GRID_SIZE)
         )
