@@ -335,7 +335,7 @@ def main():
             wrong_product.randomize_position(snake.positions
                                              + [apple.position])
         # Проверка, должна ли быть сброшена змейка.
-        if snake.reset_situation is True:
+        if snake.reset_situation:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
             snake.reset_situation = False
