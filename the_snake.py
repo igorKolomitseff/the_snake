@@ -358,6 +358,7 @@ def main():
         # Проверка, съедено ли яблоко.
         if snake.get_head_position() == apple.position:
             snake.length += 1
+            snake.update_max_length()
             apple.randomize_position(snake.positions
                                      + [wrong_product.position])
         # Проверка, съеден ли неправильный продукт.
@@ -367,7 +368,6 @@ def main():
                                              + [apple.position])
         # Проверка, должна ли быть сброшена змейка.
         if snake.reset_situation is True:
-            snake.update_max_length()
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
             snake.reset_situation = False
