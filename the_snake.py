@@ -169,7 +169,7 @@ class Snake(GameObject):
     """
 
     def __init__(self,
-                 body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
+                 body_color: tuple[int, ...] = SNAKE_COLOR) -> None:
         super().__init__(body_color)
         self.reset()
         self.speed = 5
@@ -248,7 +248,7 @@ class Apple(GameObject):
 
     def __init__(self,
                  hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
-                 body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
+                 body_color: tuple[int, ...] = APPLE_COLOR) -> None:
         super().__init__(body_color)
         self.randomize_position(hold_positions)
 
@@ -278,7 +278,7 @@ class WrongProduct(Apple):
 
     def __init__(self,
                  hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
-                 body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
+                 body_color: tuple[int, ...] = WRONG_PRODUCT_COLOR) -> None:
         super().__init__(hold_positions, body_color)
 
 
@@ -311,12 +311,10 @@ def handle_keys(snake_object: Snake) -> None:
 def main():
     """Запускает игру "Змейка"."""
     # Инициализация объектов классов.
-    snake = Snake(body_color=SNAKE_COLOR)
-    apple = Apple(hold_positions=snake.positions,
-                  body_color=APPLE_COLOR)
+    snake = Snake()
+    apple = Apple(hold_positions=snake.positions)
     wrong_product = WrongProduct(hold_positions=(snake.positions
-                                                 + [apple.position]),
-                                 body_color=WRONG_PRODUCT_COLOR)
+                                                 + [apple.position]))
     while True:
         # Замедление скорости движения змейки до SPEED раз в секунду.
         clock.tick(snake.speed)
