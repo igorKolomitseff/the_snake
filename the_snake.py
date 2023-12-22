@@ -143,7 +143,8 @@ class GameObject:
 
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
-        raise AttributeError('Игровой объект не имеет атрибут draw')
+        raise NotImplementedError(f'{self.__class__.__name__} '
+                                  f'не имеет реализации метода draw.')
 
 
 class Snake(GameObject):
@@ -270,8 +271,7 @@ class Apple(GameObject):
 
 
 class WrongProduct(Apple):
-    """Класс для представления объекта "Неправильный продукт" в игре "Змейка".
-    """
+    """Класс для представления объекта "Неправильный продукт"."""
 
     def __init__(self,
                  hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
@@ -319,14 +319,14 @@ def main():
     apple = Apple(hold_positions=snake.positions)
     wrong_product = WrongProduct(hold_positions=(snake.positions
                                                  + [apple.position]))
-    
+
     # Заголовок окна игрового поля.
     pg.display.set_caption(TITLE.format(max_length=snake.max_length,
                                         speed=snake.speed))
     while True:
         # Замедление скорости движения змейки до SPEED раз в секунду.
         clock.tick(snake.speed)
-        # Проверка, нужно ли обновлять информацию
+        # Проверка, нужно ли обновлять информацию в заголовке.
         if snake.update_information:
             pg.display.set_caption(TITLE.format(max_length=snake.max_length,
                                                 speed=snake.speed))
