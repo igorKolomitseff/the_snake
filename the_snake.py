@@ -165,9 +165,6 @@ class Snake(GameObject):
             списка positions) в центре экрана.
         direction: Направление движения объекта "Змейка". Инициализируется
             кортежем, содержащим численное представление направления движения.
-        next_direction: Следующее направление движения, которое будет применено
-            после обработки нажатия клавиши. Определяется внешней функцией
-            handle_keys.
         speed: Скорость движения объекта "Змейка". Инициализируется
             значением 5.
         max_length: Максимальная величина змейки за игру. Инициализируется
@@ -192,7 +189,6 @@ class Snake(GameObject):
         """Инициализирует объект класса."""
         super().__init__(body_color)
         self.reset()
-        self.next_direction: Optional[tuple[int, int]] = None
         self.speed = 5
         self.max_length = 1
         self.last: Optional[tuple[int, int]] = None
@@ -259,7 +255,7 @@ class Apple(GameObject):
     Наследуется от класса GameObject.
 
     Атрибуты:
-        occupied_positions: Занятые ячейки. Инициализируется при создании
+        hold_positions: Занятые ячейки. Инициализируется при создании
             объекта класса. По умолчанию - [CENTER_SCREEN_POINT].
 
     Методы:
@@ -282,12 +278,6 @@ class Apple(GameObject):
             hold_positions: Занятые ячейки.
         """
         while True:
-            # Под координатами в данном случае подразумеваются координаты
-            # верхнего левого угла ячейки. Функция randint выбирает случайное
-            # число из переданного ей диапазона, включая правое значение.
-            # Поэтому для предотвращения отображения объекта за пределами
-            # правой границы экрана функции randint нужно передать
-            # (размер сетки - 1).
             random_width = (randint(0, GRID_WIDTH - 1) * GRID_SIZE)
             random_height = (randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
             if (random_width, random_height) not in hold_positions:
