@@ -35,6 +35,7 @@
 """
 from random import choice, randint
 from typing import Optional
+import sys
 
 import pygame as pg
 
@@ -310,10 +311,12 @@ def handle_keys(snake_object: Snake) -> None:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
+            sys.exit()
         elif event.type == pg.KEYDOWN:
             # Выход из игры по клавише ESC.
             if event.key == pg.K_ESCAPE:
                 pg.quit()
+                sys.exit()
             # Определение нового направления движения змейки.
             snake_object.next_direction = NEW_DIRECTION.get(
                 (snake_object.direction, event.key))
