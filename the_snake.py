@@ -263,7 +263,7 @@ class Apple(GameObject):
             random_height = (randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
             if (random_width, random_height) not in hold_positions:
                 self.position = (random_width, random_height)
-                break
+                return
 
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
