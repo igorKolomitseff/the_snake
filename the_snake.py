@@ -180,8 +180,8 @@ class Snake(GameObject):
     def reset(self) -> None:
         """Сбрасывает объект "Змейка" в начальное состояние."""
         self.length = 1
-        self.positions: list[tuple[int, int]] = [self.position]
-        self.direction: tuple[int, int] = choice((UP, DOWN, RIGHT, LEFT))
+        self.positions = [self.position]
+        self.direction = choice((UP, DOWN, RIGHT, LEFT))
 
     def get_head_position(self) -> tuple[int, int]:
         """Возвращает позицию головы объекта "Змейка"."""
