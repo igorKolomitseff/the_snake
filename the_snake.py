@@ -41,6 +41,11 @@ import pygame as pg
 # Инициализация PyGame.
 pg.init()
 
+# Настройка заголовка.
+TITLE = ('ЗМЕЙКА. Макс. длина: {max_length}. '
+         + 'Скорость: {speed} (Клав. 1 - 9) | '
+         + '(Выход: ESC)')
+
 # Константы для размеров.
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
@@ -332,9 +337,8 @@ def main():
         clock.tick(snake.speed)
         # Заголовок окна игрового поля.
         # Информация обновляется каждую итерацию.
-        pg.display.set_caption(f'ЗМЕЙКА.  Макс. длина: {snake.max_length}. '
-                               f'Скорость: {snake.speed} (Клав. 1 - 9) | '
-                               f'(Выход: ESC)')
+        pg.display.set_caption(TITLE.format(max_length=snake.max_length,
+                                            speed=snake.speed))
         # Обработка нажатий клавиш.
         handle_keys(snake)
         # Проверка, съедено ли яблоко.
