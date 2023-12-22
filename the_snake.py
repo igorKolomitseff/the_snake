@@ -18,8 +18,9 @@
 Управление:
     - Изменение направления движения змейки: клавиши-стрелки Вверх, Вниз,
         Влево, Вправо.
-    - Изменение скорости движения змейки: клавиши от 1 до 9 включительно,
-        где 1 - самая низкая скорость, 9 - самая высокая скорость.
+    - Изменение скорости движения змейки:
+        левая клавиша SHIFT - увеличение скорости змейки на 5 единиц.
+        левая клавиша CTRL - уменьшение скорости змейки на 5 единиц.
     - Выход из игры: клавиша Esc.
 
 Классы:
@@ -43,9 +44,9 @@ import pygame as pg
 pg.init()
 
 # Настройка заголовка.
-TITLE = ('ЗМЕЙКА. Макс. длина: {max_length}. '
-         + 'Скорость: {speed} (Клав. 1 - 9) | '
-         + '(Выход: ESC)')
+TITLE = ('SNAKE. Max. length: {max_length}. '
+         + 'Speed: {speed} (SHIFT \u2191, CTRL \u2193) | '
+         + '(Exit: ESC)')
 
 # Константы для размеров.
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
@@ -72,18 +73,14 @@ NEW_DIRECTION = {
     (DOWN, pg.K_RIGHT): RIGHT
 }
 
+MIN_SPEED = 5
+MAX_SPEED = 50
+
 # Словарь с привязкой цифровых клавиш клавиатуры
-# к скорости движения змейки.
+# к изменению (уменьшению или увеличению) скорости движения змейки.
 SNAKE_SPEED = {
-    pg.K_1: 1,
-    pg.K_2: 2,
-    pg.K_3: 3,
-    pg.K_4: 4,
-    pg.K_5: 5,
-    pg.K_6: 6,
-    pg.K_7: 7,
-    pg.K_8: 8,
-    pg.K_9: 9
+    pg.K_LSHIFT: 5,
+    pg.K_LCTRL: -5
 }
 
 # Цвета фона - светло-серый.
@@ -206,22 +203,23 @@ class Snake(GameObject):
         if len(self.positions) > self.length:
             self.last = self.positions.pop()
 
-    def update_direction(self, event_key: int) -> None:
+    def update_direction(self, new_direction: tuple[int, int]) -> None:
         """Обновляет направление движения объекта "Змейка".
 
         Параметры:
-            event_key: Клавиша клавиатуры.
+            next_direction: Новое направление движения объекта "Змейка".
         """
-        self.direction = NEW_DIRECTION.get((self.direction, event_key),
-                                           self.direction)
+        self.direction = new_direction
 
-    def update_speed(self, event_key: int) -> None:
+    def update_speed(self, speed_change: int) -> None:
         """Обновляет скорость движения объекта "Змейка".
 
         Параметры:
-            event_key: Клавиша клавиатуры.
+            speed_change: Изменение скорости объекта "Змейка".
         """
-        self.speed = SNAKE_SPEED.get(event_key, self.speed)
+        new_speed = self.speed + speed_change
+        self.speed = (new_speed if MIN_SPEED <= new_speed <= MAX_SPEED
+                      else self.speed)
 
     def update_max_length(self):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
@@ -286,22 +284,28 @@ def handle_keys(snake_object: Snake) -> None:
     Параметры:
         game_object: Объект класса Snake.
     """
+    new_direction = None
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
             sys.exit()
-        elif event.type == pg.KEYDOWN:
+        if event.type == pg.KEYDOWN:
             # Выход из игры по клавише ESC.
             if event.key == pg.K_ESCAPE:
                 pg.quit()
                 sys.exit()
             # Обновление направления движения змейки.
             if event.key in (pg.K_UP, pg.K_DOWN, pg.K_LEFT, pg.K_RIGHT):
-                snake_object.update_direction(event.key)
+                new_direction = NEW_DIRECTION.get((snake_object.direction,
+                                                   event.key),
+                                                  snake_object.direction)
+            if new_direction:
+                snake_object.update_direction(new_direction)
+                new_direction = None
             # Обновление скорости движения змейки.
-            if event.key in (pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5,
-                             pg.K_6, pg.K_7, pg.K_8, pg.K_9):
-                snake_object.update_speed(event.key)
+            if event.key in (pg.K_LSHIFT, pg.K_LCTRL):
+                speed_change = SNAKE_SPEED.get(event.key, 0)
+                snake_object.update_speed(speed_change)
 
 
 def main():
