@@ -124,7 +124,6 @@ class GameObject:
 
     def __init__(self,
                  body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
-        """Инициализирует атрибуты класса."""
         self.position: tuple[int, int] = CENTER_SCREEN_POINT
         self.body_color: tuple[int, ...] = body_color
 
@@ -182,7 +181,6 @@ class Snake(GameObject):
 
     def __init__(self,
                  body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
-        """Инициализирует объект класса."""
         super().__init__(body_color)
         self.reset()
         self.speed = 5
@@ -262,7 +260,6 @@ class Apple(GameObject):
     def __init__(self,
                  hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
                  body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
-        """Инициализирует объект класса."""
         super().__init__(body_color)
         self.randomize_position(hold_positions)
 
@@ -293,7 +290,6 @@ class WrongProduct(Apple):
     def __init__(self,
                  hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
                  body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
-        """Инициализирует объект класса."""
         super().__init__(hold_positions, body_color)
 
 
