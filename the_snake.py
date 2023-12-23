@@ -112,6 +112,9 @@ pg.display.flip()
 # Настройка времени.
 clock = pg.time.Clock()
 
+# Флаг для корректировки необходимости обновления информации в заголовке.
+update_title_information = False
+
 
 class GameObject:
     """Базовый класс для игровых объектов.
@@ -165,8 +168,6 @@ class Snake(GameObject):
         max_length: Максимальная величина змейки за игру.
         last: Позиция последнего сегмента объекта "Змейка".
         reset_situation: Проверка сброса объекта "Змейка".
-        update_information: Проверка необходимости обновления информации об
-            объекте "Змейка".
     """
 
     MIN_SNAKE_SPEED = 5
@@ -182,7 +183,6 @@ class Snake(GameObject):
         self.max_length = self.length
         self.last = None
         self.reset_situation = False
-        self.update_information = False
 
     def reset(self) -> None:
         """Сбрасывает объект "Змейка" в начальное состояние."""
@@ -226,7 +226,14 @@ class Snake(GameObject):
         """
         if self.MIN_SNAKE_SPEED <= new_speed <= self.MAX_SNAKE_SPEED:
             self.speed = new_speed
-            self.update_information = True
+            global update_title_information
+            update_title_information = True
+
+    def increase_length(self):
+        """Увеличивает длину объекта "Змейка."""
+        self.length += 1
+        global update_title_information
+        update_title_information = True
 
     def update_max_length(self):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
@@ -318,22 +325,21 @@ def main():
         body_color=WRONG_PRODUCT_COLOR,
         hold_positions=[*snake.positions, apple.position])
 
-    # Заголовок окна игрового поля.
-    pg.display.set_caption(TITLE.format(max_length=snake.max_length,
-                                        speed=snake.speed))
+    global update_title_information
+    update_title_information = True
+
     while True:
         clock.tick(snake.speed)
         # Проверка, нужно ли обновлять информацию в заголовке.
-        if snake.update_information:
+        if update_title_information:
             pg.display.set_caption(TITLE.format(max_length=snake.max_length,
                                                 speed=snake.speed))
-            snake.update_information = False
+            update_title_information = False
         handle_keys(snake)
         # Проверка, съедено ли яблоко.
         if snake.get_head_position() == apple.position:
-            snake.length += 1
+            snake.increase_length()
             snake.update_max_length()
-            snake.update_information = True
             apple.randomize_position(
                 [*snake.positions, wrong_product.position]
             )
