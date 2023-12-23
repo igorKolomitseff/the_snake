@@ -36,7 +36,7 @@ pg.init()
 
 # Настройка заголовка.
 TITLE = ('SNAKE. Max. length: {max_length}. '
-         + 'Speed: {speed} (SHIFT \u2191, CTRL \u2193) | '
+         + 'Speed: {speed} (SHIFT ↑, CTRL ↓) |'
          + '(Exit: ESC)')
 
 # Константы для размеров.
