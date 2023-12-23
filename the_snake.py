@@ -19,20 +19,11 @@
     - Изменение направления движения змейки: клавиши-стрелки Вверх, Вниз,
         Влево, Вправо.
     - Изменение скорости движения змейки:
-        левая клавиша SHIFT - увеличение скорости змейки на 5 единиц.
-        левая клавиша CTRL - уменьшение скорости змейки на 5 единиц.
+        левая или правая клавиша SHIFT - увеличение скорости змейки на 5
+        единиц.
+        левая или правая клавиша CTRL - уменьшение скорости змейки на 5
+        единиц.
     - Выход из игры: клавиша Esc.
-
-Классы:
-    GameObject: Базовый класс для игровых объектов.
-    Snake: Класс для представления объекта "Змейка" в игре "Змейка".
-    Apple: Класс для представления объекта "Яблоко" в игре "Змейка".
-    WrongProduct: Класс для представления объекта "Неправильный продукт" в
-        игре "Змейка".
-
-Функции:
-    handle_keys: Обрабатывает нажатия клавиш пользователем.
-    main: Запускает игру "Змейка".
 """
 from random import choice, randint
 from typing import Optional
@@ -74,14 +65,16 @@ NEW_DIRECTION = {
 }
 
 # Настройка скорости движения змейки.
-MIN_SPEED = 5
-MAX_SPEED = 30
+MIN_SNAKE_SPEED = 5
+MAX_SNAKE_SPEED = 30
 
 # Словарь с привязкой цифровых клавиш клавиатуры
 # к изменению (уменьшению или увеличению) скорости движения змейки.
 SNAKE_SPEED = {
     pg.K_LSHIFT: 5,
-    pg.K_LCTRL: -5
+    pg.K_RSHIFT: 5,
+    pg.K_LCTRL: -5,
+    pg.K_RCTRL: -5
 }
 
 # Цвета фона - светло-серый.
@@ -115,9 +108,8 @@ class GameObject:
     """Базовый класс для игровых объектов.
 
     Атрибуты:
-        position: Позиция объекта на игровом поле. Инициализируется
-            как центральная точка экрана.
-        body_color: Цвет объекта. По умолчанию - BOARD_BACKGROUND_COLOR.
+        position: Позиция объекта на игровом поле.
+        body_color: Цвет объекта.
     """
 
     def __init__(self,
@@ -151,20 +143,16 @@ class Snake(GameObject):
     """Класс для представления объекта "Змейка" в игре "Змейка".
 
     Атрибуты:
-        length: Длина объекта "Змейка". Инициализируется значением 1.
+        length: Длина объекта "Змейка".
         positions: Список, содержащий позиции всех сегментов тела объекта
-            "Змейка". Инициализируется с позицией головы (первого элемента
-            списка positions) в центре экрана.
-        direction: Направление движения объекта "Змейка". Инициализируется
-            кортежем, содержащим численное представление направления движения.
-        speed: Скорость движения объекта "Змейка". Инициализируется
-            значением 5.
-        max_length: Максимальная величина змейки за игру. Инициализируется
-            значением 1.
-        last: Позиция последнего сегмента объекта "Змейка" (последнего элемента
-            списка positions). Инициализируется значением None.
+            "Змейка".
+        direction: Направление движения объекта "Змейка".
+        speed: Скорость движения объекта "Змейка".
+        max_length: Максимальная величина змейки за игру.
+        last: Позиция последнего сегмента объекта "Змейка".
         reset_situation: Проверка сброса объекта "Змейка".
-        update_information: Проверка необходимости обновления информации.
+        update_information: Проверка необходимости обновления информации об
+            объекте "Змейка".
     """
 
     def __init__(self,
@@ -215,15 +203,13 @@ class Snake(GameObject):
         """
         self.direction = new_direction
 
-    def update_speed(self, speed_change: int) -> None:
+    def update_speed(self, new_speed: int) -> None:
         """Обновляет скорость движения объекта "Змейка".
 
         Параметры:
-            speed_change: Изменение скорости объекта "Змейка".
+            new_speed: Новая скорость объекта "Змейка".
         """
-        new_speed = self.speed + speed_change
-        self.speed = (new_speed if MIN_SPEED <= new_speed <= MAX_SPEED
-                      else self.speed)
+        self.speed = new_speed
 
     def update_max_length(self):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
@@ -241,8 +227,7 @@ class Apple(GameObject):
     """Класс для представления объекта "Яблоко" в игре "Змейка".
 
     Атрибуты:
-        hold_positions: Занятые ячейки. Инициализируется при создании
-            объекта класса. По умолчанию - [CENTER_SCREEN_POINT].
+        hold_positions: Занятые ячейки.
     """
 
     def __init__(self,
@@ -281,13 +266,10 @@ class WrongProduct(Apple):
 
 def handle_keys(snake_object: Snake) -> None:
     """Обрабатывает нажатия клавиш пользователем.
-    Применяется для изменения направления движения объекта "Змейка" и
-        изменения скорости её движения.
 
     Параметры:
         game_object: Объект класса Snake.
     """
-    new_direction = None
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
@@ -302,14 +284,14 @@ def handle_keys(snake_object: Snake) -> None:
                 new_direction = NEW_DIRECTION.get((snake_object.direction,
                                                    event.key),
                                                   snake_object.direction)
-            if new_direction:
                 snake_object.update_direction(new_direction)
-                new_direction = None
             # Обновление скорости движения змейки.
-            if event.key in (pg.K_LSHIFT, pg.K_LCTRL):
-                speed_change = SNAKE_SPEED.get(event.key, 0)
-                snake_object.update_speed(speed_change)
-                snake_object.update_information = True
+            elif event.key in (pg.K_LSHIFT, pg.K_RSHIFT,
+                               pg.K_LCTRL, pg.K_RCTRL):
+                new_speed = snake_object.speed + SNAKE_SPEED.get(event.key, 0)
+                if MIN_SNAKE_SPEED <= new_speed <= MAX_SNAKE_SPEED:
+                    snake_object.update_speed(new_speed)
+                    snake_object.update_information = True
 
 
 def main():
@@ -337,9 +319,9 @@ def main():
         if snake.get_head_position() == apple.position:
             snake.length += 1
             snake.update_max_length()
+            snake.update_information = True
             apple.randomize_position(snake.positions
                                      + [wrong_product.position])
-            snake.update_information = True
         # Проверка, съеден ли неправильный продукт.
         elif snake.get_head_position() == wrong_product.position:
             snake.reset_situation = True
