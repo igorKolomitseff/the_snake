@@ -140,7 +140,7 @@ class GameObject:
 
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
-        raise NotImplementedError(f'{self.__class__.__name__} '
+        raise NotImplementedError(f'{type(self).__name__} '
                                   f'не имеет реализации метода draw.')
 
 
