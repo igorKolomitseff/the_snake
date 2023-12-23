@@ -178,8 +178,8 @@ class Snake(GameObject):
     ) -> None:
         super().__init__(body_color)
         self.reset()
-        self.speed = 5
-        self.max_length = 1
+        self.speed = self.MIN_SNAKE_SPEED
+        self.max_length = self.length
         self.last = None
         self.reset_situation = False
         self.update_information = False
