@@ -265,12 +265,7 @@ class Apple(GameObject):
 class WrongProduct(Apple):
     """Класс для представления объекта "Неправильный продукт"."""
 
-    def __init__(
-        self,
-        hold_positions: list[tuple[int, ...]] = [CENTER_SCREEN_POINT],
-        body_color: tuple[int, ...] = WRONG_PRODUCT_COLOR
-    ) -> None:
-        super().__init__(hold_positions, body_color)
+    pass
 
 
 def handle_keys(snake_object: Snake) -> None:
@@ -307,8 +302,10 @@ def main():
     """Запускает игру "Змейка"."""
     snake = Snake()
     apple = Apple(hold_positions=snake.positions)
-    wrong_product = WrongProduct(hold_positions=(snake.positions
-                                                 + [apple.position]))
+    wrong_product = WrongProduct(
+        body_color=WRONG_PRODUCT_COLOR,
+        hold_positions=(snake.positions
+                        + [apple.position]))
 
     # Заголовок окна игрового поля.
     pg.display.set_caption(TITLE.format(max_length=snake.max_length,
