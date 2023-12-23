@@ -114,10 +114,10 @@ class GameObject:
 
     def __init__(self,
                  body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
-        self.position: tuple[int, int] = CENTER_SCREEN_POINT
+        self.position: tuple[int, ...] = CENTER_SCREEN_POINT
         self.body_color: tuple[int, ...] = body_color
 
-    def draw_cell(self, position: tuple[int, int],
+    def draw_cell(self, position: tuple[int, ...],
                   cell_color: Optional[tuple[int, ...]] = None) -> None:
         """Отрисовывает ячейку объекта на экране.
 
@@ -161,7 +161,7 @@ class Snake(GameObject):
         self.reset()
         self.speed = 5
         self.max_length = 1
-        self.last: Optional[tuple[int, int]] = None
+        self.last: Optional[tuple[int, ...]] = None
         self.reset_situation = False
         self.update_information = False
 
@@ -171,7 +171,7 @@ class Snake(GameObject):
         self.positions = [self.position]
         self.direction = choice((UP, DOWN, RIGHT, LEFT))
 
-    def get_head_position(self) -> tuple[int, int]:
+    def get_head_position(self) -> tuple[int, ...]:
         """Возвращает позицию головы объекта "Змейка"."""
         return self.positions[0]
 
@@ -195,7 +195,7 @@ class Snake(GameObject):
         if len(self.positions) > self.length:
             self.last = self.positions.pop()
 
-    def update_direction(self, new_direction: tuple[int, int]) -> None:
+    def update_direction(self, new_direction: tuple[int, ...]) -> None:
         """Обновляет направление движения объекта "Змейка".
 
         Параметры:
@@ -231,13 +231,13 @@ class Apple(GameObject):
     """
 
     def __init__(self,
-                 hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
+                 hold_positions: list[tuple[int, ...]] = [CENTER_SCREEN_POINT],
                  body_color: tuple[int, ...] = APPLE_COLOR) -> None:
         super().__init__(body_color)
         self.randomize_position(hold_positions)
 
     def randomize_position(self,
-                           hold_positions: list[tuple[int, int]]) -> None:
+                           hold_positions: list[tuple[int, ...]]) -> None:
         """Устанавливает случайное положение объекта-продукта на игровом поле.
 
         Параметры:
@@ -259,7 +259,7 @@ class WrongProduct(Apple):
     """Класс для представления объекта "Неправильный продукт"."""
 
     def __init__(self,
-                 hold_positions: list[tuple[int, int]] = [CENTER_SCREEN_POINT],
+                 hold_positions: list[tuple[int, ...]] = [CENTER_SCREEN_POINT],
                  body_color: tuple[int, ...] = WRONG_PRODUCT_COLOR) -> None:
         super().__init__(hold_positions, body_color)
 
