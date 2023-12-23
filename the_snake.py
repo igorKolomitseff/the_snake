@@ -53,7 +53,7 @@ RIGHT = (1, 0)
 
 # Словарь с привязкой текущего направления движения змейки и клавиш
 # клавиатуры со следующим направлением движения змейки.
-NEW_DIRECTION = {
+NEW_DIRECTIONS = {
     (LEFT, pg.K_UP): UP,
     (RIGHT, pg.K_UP): UP,
     (LEFT, pg.K_DOWN): DOWN,
@@ -63,19 +63,28 @@ NEW_DIRECTION = {
     (UP, pg.K_RIGHT): RIGHT,
     (DOWN, pg.K_RIGHT): RIGHT
 }
+DIRECTION_CONTROL_BUTTONS = (
+    pg.K_UP,
+    pg.K_DOWN,
+    pg.K_LEFT,
+    pg.K_RIGHT
+)
 
-# Настройка скорости движения змейки.
-MIN_SNAKE_SPEED = 5
-MAX_SNAKE_SPEED = 30
-
-# Словарь с привязкой клавиш клавиатуры к изменению
-# (уменьшению или увеличению) скорости движения змейки.
-SNAKE_SPEED = {
-    pg.K_LSHIFT: 5,
-    pg.K_RSHIFT: 5,
-    pg.K_LCTRL: -5,
-    pg.K_RCTRL: -5
+# Словарь с привязкой клавиш клавиатуры к ускорению
+# скорости движения змейки.
+SNAKE_ACCELERATIONS = {
+    pg.K_LSHIFT: 1,
+    pg.K_RSHIFT: 1,
+    pg.K_LCTRL: -1,
+    pg.K_RCTRL: -1
 }
+ACCELERATION_CONTROL_BUTTONS = (
+    pg.K_LSHIFT,
+    pg.K_RSHIFT,
+    pg.K_LCTRL,
+    pg.K_RCTRL
+)
+
 
 # Цвета фона - светло-серый.
 BOARD_BACKGROUND_COLOR = (211, 211, 211)
@@ -160,6 +169,9 @@ class Snake(GameObject):
             объекте "Змейка".
     """
 
+    MIN_SNAKE_SPEED = 5
+    MAX_SNAKE_SPEED = 30
+
     def __init__(
         self,
         body_color: tuple[int, ...] = SNAKE_COLOR
@@ -212,7 +224,9 @@ class Snake(GameObject):
         Параметры:
             new_speed: Новая скорость объекта "Змейка".
         """
-        self.speed = new_speed
+        if self.MIN_SNAKE_SPEED <= new_speed <= self.MAX_SNAKE_SPEED:
+            self.speed = new_speed
+            self.update_information = True
 
     def update_max_length(self):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
@@ -284,18 +298,16 @@ def handle_keys(snake_object: Snake) -> None:
                 pg.quit()
                 sys.exit()
             # Обновление направления движения змейки.
-            if event.key in (pg.K_UP, pg.K_DOWN, pg.K_LEFT, pg.K_RIGHT):
-                new_direction = NEW_DIRECTION.get((snake_object.direction,
-                                                   event.key),
-                                                  snake_object.direction)
-                snake_object.update_direction(new_direction)
+            if event.key in DIRECTION_CONTROL_BUTTONS:
+                snake_object.update_direction(
+                    NEW_DIRECTIONS.get((snake_object.direction, event.key),
+                                       snake_object.direction)
+                )
             # Обновление скорости движения змейки.
-            elif event.key in (pg.K_LSHIFT, pg.K_RSHIFT,
-                               pg.K_LCTRL, pg.K_RCTRL):
-                new_speed = snake_object.speed + SNAKE_SPEED.get(event.key, 0)
-                if MIN_SNAKE_SPEED <= new_speed <= MAX_SNAKE_SPEED:
-                    snake_object.update_speed(new_speed)
-                    snake_object.update_information = True
+            elif event.key in ACCELERATION_CONTROL_BUTTONS:
+                snake_object.update_speed(
+                    snake_object.speed + SNAKE_ACCELERATIONS[event.key]
+                )
 
 
 def main():
