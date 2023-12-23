@@ -272,10 +272,11 @@ class Apple(GameObject):
             hold_positions: Занятые ячейки.
         """
         while True:
-            random_width = (randint(0, GRID_WIDTH - 1) * GRID_SIZE)
-            random_height = (randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
-            if (random_width, random_height) not in hold_positions:
-                self.position = (random_width, random_height)
+            self.position = (
+                randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+                randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+            )
+            if self.position not in hold_positions:
                 return
 
     def draw(self) -> None:
