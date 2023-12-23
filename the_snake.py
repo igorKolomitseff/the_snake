@@ -68,8 +68,8 @@ NEW_DIRECTION = {
 MIN_SNAKE_SPEED = 5
 MAX_SNAKE_SPEED = 30
 
-# Словарь с привязкой цифровых клавиш клавиатуры
-# к изменению (уменьшению или увеличению) скорости движения змейки.
+# Словарь с привязкой клавиш клавиатуры к изменению
+# (уменьшению или увеличению) скорости движения змейки.
 SNAKE_SPEED = {
     pg.K_LSHIFT: 5,
     pg.K_RSHIFT: 5,
@@ -114,8 +114,8 @@ class GameObject:
 
     def __init__(self,
                  body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
-        self.position: tuple[int, ...] = CENTER_SCREEN_POINT
-        self.body_color: tuple[int, ...] = body_color
+        self.position = CENTER_SCREEN_POINT
+        self.body_color = body_color
 
     def draw_cell(self, position: tuple[int, ...],
                   cell_color: Optional[tuple[int, ...]] = None) -> None:
@@ -161,7 +161,7 @@ class Snake(GameObject):
         self.reset()
         self.speed = 5
         self.max_length = 1
-        self.last: Optional[tuple[int, ...]] = None
+        self.last = None
         self.reset_situation = False
         self.update_information = False
 
@@ -178,20 +178,16 @@ class Snake(GameObject):
     def move(self) -> None:
         """Обновляет позицию объекта "Змейка"."""
         current_head_position = self.get_head_position()
-        # Определение новой позиции головы.
         next_head_position = (
             (current_head_position[0] + self.direction[0] * GRID_SIZE)
             % SCREEN_WIDTH,
             (current_head_position[1] + self.direction[1] * GRID_SIZE)
             % SCREEN_HEIGHT
         )
-        # Проверка на столкновение с собой.
         if next_head_position in self.positions:
             self.reset_situation = True
-        # Обновление списка позиций.
         else:
             self.positions.insert(0, next_head_position)
-        # Проверка текущей длины змеи
         if len(self.positions) > self.length:
             self.last = self.positions.pop()
 
@@ -219,7 +215,7 @@ class Snake(GameObject):
         """Отрисовывает объект "Змейка" на экране."""
         self.draw_cell(self.get_head_position())
         # Затирание старой позиции хвоста змейки.
-        self.draw_cell(self.last,
+        self.draw_cell(position=self.last,
                        cell_color=BOARD_BACKGROUND_COLOR)
 
 
@@ -296,7 +292,6 @@ def handle_keys(snake_object: Snake) -> None:
 
 def main():
     """Запускает игру "Змейка"."""
-    # Инициализация объектов классов.
     snake = Snake()
     apple = Apple(hold_positions=snake.positions)
     wrong_product = WrongProduct(hold_positions=(snake.positions
@@ -306,14 +301,12 @@ def main():
     pg.display.set_caption(TITLE.format(max_length=snake.max_length,
                                         speed=snake.speed))
     while True:
-        # Замедление скорости движения змейки до SPEED раз в секунду.
         clock.tick(snake.speed)
         # Проверка, нужно ли обновлять информацию в заголовке.
         if snake.update_information:
             pg.display.set_caption(TITLE.format(max_length=snake.max_length,
                                                 speed=snake.speed))
             snake.update_information = False
-        # Обработка нажатий клавиш.
         handle_keys(snake)
         # Проверка, съедено ли яблоко.
         if snake.get_head_position() == apple.position:
@@ -336,7 +329,6 @@ def main():
         apple.draw()
         wrong_product.draw()
         snake.draw()
-        # Обновление дисплея.
         pg.display.update()
 
 
