@@ -316,8 +316,7 @@ def main():
     apple = Apple(hold_positions=snake.positions)
     wrong_product = WrongProduct(
         body_color=WRONG_PRODUCT_COLOR,
-        hold_positions=(snake.positions
-                        + [apple.position]))
+        hold_positions=[*snake.positions, apple.position])
 
     # Заголовок окна игрового поля.
     pg.display.set_caption(TITLE.format(max_length=snake.max_length,
@@ -335,8 +334,9 @@ def main():
             snake.length += 1
             snake.update_max_length()
             snake.update_information = True
-            apple.randomize_position(snake.positions
-                                     + [wrong_product.position])
+            apple.randomize_position(
+                [*snake.positions, wrong_product.position]
+            )
         # Проверка, съеден ли неправильный продукт.
         elif snake.get_head_position() == wrong_product.position:
             snake.reset_situation = True
