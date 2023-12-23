@@ -112,13 +112,18 @@ class GameObject:
         body_color: Цвет объекта.
     """
 
-    def __init__(self,
-                 body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR) -> None:
+    def __init__(
+        self,
+        body_color: tuple[int, ...] = BOARD_BACKGROUND_COLOR
+    ) -> None:
         self.position = CENTER_SCREEN_POINT
         self.body_color = body_color
 
-    def draw_cell(self, position: tuple[int, ...],
-                  cell_color: Optional[tuple[int, ...]] = None) -> None:
+    def draw_cell(
+        self,
+        position: tuple[int, ...],
+        cell_color: Optional[tuple[int, ...]] = None
+    ) -> None:
         """Отрисовывает ячейку объекта на экране.
 
         Параметры:
@@ -155,8 +160,10 @@ class Snake(GameObject):
             объекте "Змейка".
     """
 
-    def __init__(self,
-                 body_color: tuple[int, ...] = SNAKE_COLOR) -> None:
+    def __init__(
+        self,
+        body_color: tuple[int, ...] = SNAKE_COLOR
+    ) -> None:
         super().__init__(body_color)
         self.reset()
         self.speed = 5
@@ -226,14 +233,18 @@ class Apple(GameObject):
         hold_positions: Занятые ячейки.
     """
 
-    def __init__(self,
-                 hold_positions: list[tuple[int, ...]] = [CENTER_SCREEN_POINT],
-                 body_color: tuple[int, ...] = APPLE_COLOR) -> None:
+    def __init__(
+        self,
+        hold_positions: list[tuple[int, ...]] = [CENTER_SCREEN_POINT],
+        body_color: tuple[int, ...] = APPLE_COLOR
+    ) -> None:
         super().__init__(body_color)
         self.randomize_position(hold_positions)
 
-    def randomize_position(self,
-                           hold_positions: list[tuple[int, ...]]) -> None:
+    def randomize_position(
+        self,
+        hold_positions: list[tuple[int, ...]]
+    ) -> None:
         """Устанавливает случайное положение объекта-продукта на игровом поле.
 
         Параметры:
@@ -254,9 +265,11 @@ class Apple(GameObject):
 class WrongProduct(Apple):
     """Класс для представления объекта "Неправильный продукт"."""
 
-    def __init__(self,
-                 hold_positions: list[tuple[int, ...]] = [CENTER_SCREEN_POINT],
-                 body_color: tuple[int, ...] = WRONG_PRODUCT_COLOR) -> None:
+    def __init__(
+        self,
+        hold_positions: list[tuple[int, ...]] = [CENTER_SCREEN_POINT],
+        body_color: tuple[int, ...] = WRONG_PRODUCT_COLOR
+    ) -> None:
         super().__init__(hold_positions, body_color)
 
 
