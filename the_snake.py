@@ -95,7 +95,7 @@ screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 clock = pg.time.Clock()
 
 # Флаг для корректировки необходимости обновления информации в заголовке.
-update_title_information = False
+update_title_information = True
 
 
 class GameObject:
@@ -322,15 +322,13 @@ def main():
         hold_positions=[*snake.positions, apple.position]
     )
 
-    global update_title_information
-    update_title_information = True
-
     screen.fill(BOARD_BACKGROUND_COLOR)
     pg.display.flip()
 
     while True:
         clock.tick(snake.speed)
         # Проверка, нужно ли обновлять информацию в заголовке.
+        global update_title_information
         if update_title_information:
             pg.display.set_caption(TITLE.format(
                 max_length=snake.max_length,
