@@ -273,6 +273,13 @@ class Apple(GameObject):
 class WrongProduct(Apple):
     """Класс для представления объекта "Неправильный продукт"."""
 
+    def __init__(
+        self,
+        hold_positions: list[tuple[int, ...]] = [CENTER_SCREEN_POINT],
+        body_color: tuple[int, ...] = WRONG_PRODUCT_COLOR
+    ) -> None:
+        super().__init__(hold_positions, body_color)
+
 
 def handle_keys(snake_object: Snake) -> None:
     """Обрабатывает нажатия клавиш пользователем.
@@ -309,16 +316,15 @@ def main():
     snake = Snake()
     apple = Apple(hold_positions=snake.positions)
     wrong_product = WrongProduct(
-        body_color=WRONG_PRODUCT_COLOR,
         hold_positions=[*snake.positions, apple.position]
     )
 
     global update_title_information
     update_title_information = True
-    
+
     screen.fill(BOARD_BACKGROUND_COLOR)
     pg.display.flip()
-    
+
     while True:
         clock.tick(snake.speed)
         # Проверка, нужно ли обновлять информацию в заголовке.
