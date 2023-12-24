@@ -232,8 +232,8 @@ class Snake(GameObject):
         self.max_length = self.length
 
     def update_max_length_speed(self):
-        """Обновляет значение скорости на момент достижения максимальной
-        длины.
+        """Обновляет значение скорости объекта "Змейка" на момент достижения
+        максимальной длины.
         """
         self.max_length_speed = self.speed
 
@@ -286,7 +286,9 @@ class Apple(GameObject):
 
 
 class WrongProduct(Apple):
-    """Класс для представления объекта "Неправильный продукт"."""
+    """Класс для представления объекта "Неправильный продукт"
+    в игре "Змейка".
+    """
 
     def __init__(
         self,
