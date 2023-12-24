@@ -72,13 +72,13 @@ DIRECTION_CONTROL_BUTTONS = {
 
 # Словарь с привязкой клавиш клавиатуры к ускорению
 # скорости движения змейки.
-SNAKE_ACCELERATIONS = {
+SPEED_ACCELERATIONS = {
     pg.K_LSHIFT: 1,
     pg.K_RSHIFT: 1,
     pg.K_LCTRL: -1,
     pg.K_RCTRL: -1
 }
-ACCELERATION_CONTROL_BUTTONS = {*SNAKE_ACCELERATIONS}
+ACCELERATION_CONTROL_BUTTONS = {*SPEED_ACCELERATIONS}
 
 # Цвета фона - светло-серый.
 BOARD_BACKGROUND_COLOR = (211, 211, 211)
@@ -312,7 +312,7 @@ def handle_keys(snake_object: Snake) -> None:
             # Обновление скорости движения змейки.
             elif event.key in ACCELERATION_CONTROL_BUTTONS:
                 snake_object.update_speed(
-                    snake_object.speed + SNAKE_ACCELERATIONS[event.key]
+                    snake_object.speed + SPEED_ACCELERATIONS[event.key]
                 )
 
 
