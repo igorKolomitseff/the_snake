@@ -31,10 +31,8 @@ import sys
 
 import pygame as pg
 
-# Инициализация PyGame.
 pg.init()
 
-# Настройка заголовка.
 TITLE = (
     'Змейка. Макс. длина: {max_length} '
     'на скорости {max_length_speed}. '
@@ -42,7 +40,6 @@ TITLE = (
     '(Выход: ESC)'
 )
 
-# Константы для размеров.
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
@@ -300,7 +297,6 @@ def handle_keys(snake_object: Snake) -> None:
             pg.quit()
             sys.exit()
         if event.type == pg.KEYDOWN:
-            # Выход из игры по клавише ESC.
             if event.key == pg.K_ESCAPE:
                 pg.quit()
                 sys.exit()
@@ -332,7 +328,7 @@ def main():
 
     while True:
         clock.tick(snake.speed)
-        # Проверка, нужно ли обновлять информацию в заголовке.
+
         global update_title_information
         if update_title_information:
             pg.display.set_caption(TITLE.format(
@@ -342,22 +338,22 @@ def main():
             ))
             update_title_information = False
         handle_keys(snake)
-        # Проверка, съедено ли яблоко.
+
         if snake.get_head_position() == apple.position:
             snake.increase_length()
             apple.randomize_position(
                 [*snake.positions, wrong_product.position]
             )
-        # Проверка, съеден ли неправильный продукт.
+
         elif snake.get_head_position() == wrong_product.position:
             snake.reset_situation = True
             wrong_product.randomize_position(
                 [*snake.positions, apple.position]
             )
-        # Проверка, должен ли быть обновлён рекорд длины змейки:
+
         if snake.length > snake.max_length:
             snake.update_max_length_record()
-        # Проверка, должна ли быть сброшена змейка.
+
         if snake.reset_situation:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
