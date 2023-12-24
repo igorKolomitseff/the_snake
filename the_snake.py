@@ -35,12 +35,15 @@ import pygame as pg
 pg.init()
 
 # Настройка заголовка.
-TITLE = ('SNAKE. Max. length: {max_length}. '
-         + 'Speed: {speed} (SHIFT ↑, CTRL ↓) |'
-         + '(Exit: ESC)')
+TITLE = (
+    'Змейка. Макс. длина: {max_length} '
+    + 'на скорости {max_length_speed}. '
+    + 'Скорость: {speed} (SHIFT ↑, CTRL ↓) |'
+    + '(Exit: ESC)'
+)
 
 # Константы для размеров.
-SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
+SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
@@ -84,7 +87,6 @@ ACCELERATION_CONTROL_BUTTONS = (
     pg.K_LCTRL,
     pg.K_RCTRL
 )
-
 
 # Цвета фона - светло-серый.
 BOARD_BACKGROUND_COLOR = (211, 211, 211)
@@ -166,6 +168,8 @@ class Snake(GameObject):
         direction: Направление движения объекта "Змейка".
         speed: Скорость движения объекта "Змейка".
         max_length: Максимальная величина змейки за игру.
+        max_length_speed: Скорость змейки на момент достижения максимальной
+            величины.
         last: Позиция последнего сегмента объекта "Змейка".
         reset_situation: Проверка сброса объекта "Змейка".
     """
@@ -181,6 +185,7 @@ class Snake(GameObject):
         self.reset()
         self.speed = self.MIN_SNAKE_SPEED
         self.max_length = self.length
+        self.max_length_speed = self.speed
         self.last = None
         self.reset_situation = False
 
@@ -204,6 +209,7 @@ class Snake(GameObject):
             % SCREEN_HEIGHT
         )
         if next_head_position in self.positions:
+            self.speed_max_length = self.speed
             self.reset_situation = True
         else:
             self.positions.insert(0, next_head_position)
@@ -232,6 +238,7 @@ class Snake(GameObject):
     def increase_length(self):
         """Увеличивает длину объекта "Змейка."""
         self.length += 1
+        self.max_length_speed = self.speed
         global update_title_information
         update_title_information = True
 
@@ -333,8 +340,11 @@ def main():
         clock.tick(snake.speed)
         # Проверка, нужно ли обновлять информацию в заголовке.
         if update_title_information:
-            pg.display.set_caption(TITLE.format(max_length=snake.max_length,
-                                                speed=snake.speed))
+            pg.display.set_caption(TITLE.format(
+                max_length=snake.max_length,
+                max_length_speed=snake.max_length_speed,
+                speed=snake.speed
+            ))
             update_title_information = False
         handle_keys(snake)
         # Проверка, съедено ли яблоко.
@@ -347,8 +357,9 @@ def main():
         # Проверка, съеден ли неправильный продукт.
         elif snake.get_head_position() == wrong_product.position:
             snake.reset_situation = True
-            wrong_product.randomize_position(snake.positions
-                                             + [apple.position])
+            wrong_product.randomize_position(
+                [*snake.positions, apple.position]
+            )
         # Проверка, должна ли быть сброшена змейка.
         if snake.reset_situation:
             snake.reset()
