@@ -37,9 +37,9 @@ pg.init()
 # Настройка заголовка.
 TITLE = (
     'Змейка. Макс. длина: {max_length} '
-    + 'на скорости {max_length_speed}. '
-    + 'Скорость: {speed} (SHIFT ↑, CTRL ↓) |'
-    + '(Выход: ESC)'
+    'на скорости {max_length_speed}. '
+    'Скорость: {speed} (SHIFT ↑, CTRL ↓) '
+    '(Выход: ESC)'
 )
 
 # Константы для размеров.
