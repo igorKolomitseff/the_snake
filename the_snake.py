@@ -233,7 +233,11 @@ class Snake(GameObject):
         """Отрисовывает объект "Змейка" на экране."""
         self.draw_cell(self.get_head_position())
         # Затирание старой позиции хвоста змейки.
-        self.draw_cell(position=self.last, cell_color=BOARD_BACKGROUND_COLOR)
+        if self.last:
+            self.draw_cell(
+                position=self.last,
+                cell_color=BOARD_BACKGROUND_COLOR
+            )
 
 
 class Apple(GameObject):
