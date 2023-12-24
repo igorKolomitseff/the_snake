@@ -147,9 +147,9 @@ class Snake(GameObject):
             "Змейка".
         direction: Направление движения объекта "Змейка".
         speed: Скорость движения объекта "Змейка".
-        max_length: Максимальная величина змейки за игру.
-        max_length_speed: Скорость змейки на момент достижения максимальной
-            величины.
+        max_length: Максимальная величина объекта "Змейка" за игру.
+        max_length_speed: Скорость объекта "Змейка" на момент достижения
+            максимальной длины.
         last: Позиция последнего сегмента объекта "Змейка".
         reset_situation: Проверка сброса объекта "Змейка".
     """
@@ -221,13 +221,20 @@ class Snake(GameObject):
     def increase_length(self):
         """Увеличивает длину объекта "Змейка."""
         self.length += 1
-        self.max_length_speed = self.speed
-        global update_title_information
-        update_title_information = True
+        if self.length > self.max_length:
+            self.update_max_length_speed()
+            global update_title_information
+            update_title_information = True
 
     def update_max_length(self):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
         self.max_length = max(self.length, self.max_length)
+
+    def update_max_length_speed(self):
+        """Обновляет значение скорости на момент достижения максимальной
+        длины.
+        """
+        self.max_length_speed = self.speed
 
     def draw(self) -> None:
         """Отрисовывает объект "Змейка" на экране."""
