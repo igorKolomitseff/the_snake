@@ -39,7 +39,7 @@ TITLE = (
     'Змейка. Макс. длина: {max_length} '
     + 'на скорости {max_length_speed}. '
     + 'Скорость: {speed} (SHIFT ↑, CTRL ↓) |'
-    + '(Exit: ESC)'
+    + '(Выход: ESC)'
 )
 
 # Константы для размеров.
