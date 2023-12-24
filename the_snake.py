@@ -189,7 +189,6 @@ class Snake(GameObject):
             % SCREEN_HEIGHT
         )
         if next_head_position in self.positions:
-            self.speed_max_length = self.speed
             self.reset_situation = True
         else:
             self.positions.insert(0, next_head_position)
@@ -221,21 +220,13 @@ class Snake(GameObject):
     def increase_length(self):
         """Увеличивает длину объекта "Змейка."""
         self.length += 1
-        if self.length > self.max_length:
-            self.update_max_length()
-            self.update_max_length_speed()
-            global update_title_information
-            update_title_information = True
 
-    def update_max_length(self):
-        """Обновляет максимальную длину объекта "Змейка" за игру."""
+    def update_max_length_record(self):
+        """Обновляет рекорд длины объекта "Змейка"."""
         self.max_length = self.length
-
-    def update_max_length_speed(self):
-        """Обновляет значение скорости объекта "Змейка" на момент достижения
-        максимальной длины.
-        """
         self.max_length_speed = self.speed
+        global update_title_information
+        update_title_information = True
 
     def draw(self) -> None:
         """Отрисовывает объект "Змейка" на экране."""
@@ -363,6 +354,9 @@ def main():
             wrong_product.randomize_position(
                 [*snake.positions, apple.position]
             )
+        # Проверка, должен ли быть обновлён рекорд длины змейки:
+        if snake.length > snake.max_length:
+            snake.update_max_length_record()
         # Проверка, должна ли быть сброшена змейка.
         if snake.reset_situation:
             snake.reset()
