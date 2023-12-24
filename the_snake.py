@@ -222,13 +222,14 @@ class Snake(GameObject):
         """Увеличивает длину объекта "Змейка."""
         self.length += 1
         if self.length > self.max_length:
+            self.update_max_length()
             self.update_max_length_speed()
             global update_title_information
             update_title_information = True
 
     def update_max_length(self):
         """Обновляет максимальную длину объекта "Змейка" за игру."""
-        self.max_length = max(self.length, self.max_length)
+        self.max_length = self.length
 
     def update_max_length_speed(self):
         """Обновляет значение скорости на момент достижения максимальной
@@ -351,7 +352,6 @@ def main():
         # Проверка, съедено ли яблоко.
         if snake.get_head_position() == apple.position:
             snake.increase_length()
-            snake.update_max_length()
             apple.randomize_position(
                 [*snake.positions, wrong_product.position]
             )
