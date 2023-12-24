@@ -80,22 +80,12 @@ SPEED_ACCELERATIONS = {
 }
 ACCELERATION_CONTROL_BUTTONS = {*SPEED_ACCELERATIONS}
 
-# Цвета фона - светло-серый.
 BOARD_BACKGROUND_COLOR = (211, 211, 211)
-
-# Цвет границы ячейки.
 CELL_BOUNDARY_COLOR = (93, 216, 228)
-
-# Цвет яблока - красный.
 APPLE_COLOR = (255, 0, 0)
-
-# Цвет неправильного продукта - оранжевый.
 WRONG_PRODUCT_COLOR = (255, 165, 0)
-
-# Цвет змейки - зелёный.
 SNAKE_COLOR = (76, 187, 23)
 
-# Центральная точка экрана.
 CENTER_SCREEN_POINT = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
 
 # Настройка игрового окна.
