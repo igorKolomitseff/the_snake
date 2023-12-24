@@ -90,8 +90,6 @@ CENTER_SCREEN_POINT = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
 
 # Настройка игрового окна.
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-screen.fill(BOARD_BACKGROUND_COLOR)
-pg.display.flip()
 
 # Настройка времени.
 clock = pg.time.Clock()
@@ -317,7 +315,10 @@ def main():
 
     global update_title_information
     update_title_information = True
-
+    
+    screen.fill(BOARD_BACKGROUND_COLOR)
+    pg.display.flip()
+    
     while True:
         clock.tick(snake.speed)
         # Проверка, нужно ли обновлять информацию в заголовке.
