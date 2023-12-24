@@ -66,12 +66,9 @@ NEW_DIRECTIONS = {
     (UP, pg.K_RIGHT): RIGHT,
     (DOWN, pg.K_RIGHT): RIGHT
 }
-DIRECTION_CONTROL_BUTTONS = (
-    pg.K_UP,
-    pg.K_DOWN,
-    pg.K_LEFT,
-    pg.K_RIGHT
-)
+DIRECTION_CONTROL_BUTTONS = {
+    key[1] for key in NEW_DIRECTIONS
+}
 
 # Словарь с привязкой клавиш клавиатуры к ускорению
 # скорости движения змейки.
@@ -81,12 +78,7 @@ SNAKE_ACCELERATIONS = {
     pg.K_LCTRL: -1,
     pg.K_RCTRL: -1
 }
-ACCELERATION_CONTROL_BUTTONS = (
-    pg.K_LSHIFT,
-    pg.K_RSHIFT,
-    pg.K_LCTRL,
-    pg.K_RCTRL
-)
+ACCELERATION_CONTROL_BUTTONS = {*SNAKE_ACCELERATIONS}
 
 # Цвета фона - светло-серый.
 BOARD_BACKGROUND_COLOR = (211, 211, 211)
@@ -146,16 +138,16 @@ class GameObject:
         """
         cell_boundary_color = cell_color if cell_color else CELL_BOUNDARY_COLOR
         cell_color = cell_color if cell_color else self.body_color
-        rect = pg.Rect(
-            (position[0], position[1]), (GRID_SIZE, GRID_SIZE)
-        )
+        rect = pg.Rect((position[0], position[1]), (GRID_SIZE, GRID_SIZE))
         pg.draw.rect(screen, cell_color, rect)
         pg.draw.rect(screen, cell_boundary_color, rect, 1)
 
     def draw(self) -> None:
         """Отрисовывает объект на экране."""
-        raise NotImplementedError(f'{type(self).__name__} '
-                                  f'не имеет реализации метода draw.')
+        raise NotImplementedError(
+            f'{type(self).__name__} '
+            f'не имеет реализации метода draw.'
+        )
 
 
 class Snake(GameObject):
@@ -250,8 +242,7 @@ class Snake(GameObject):
         """Отрисовывает объект "Змейка" на экране."""
         self.draw_cell(self.get_head_position())
         # Затирание старой позиции хвоста змейки.
-        self.draw_cell(position=self.last,
-                       cell_color=BOARD_BACKGROUND_COLOR)
+        self.draw_cell(position=self.last, cell_color=BOARD_BACKGROUND_COLOR)
 
 
 class Apple(GameObject):
@@ -294,8 +285,6 @@ class Apple(GameObject):
 class WrongProduct(Apple):
     """Класс для представления объекта "Неправильный продукт"."""
 
-    pass
-
 
 def handle_keys(snake_object: Snake) -> None:
     """Обрабатывает нажатия клавиш пользователем.
@@ -315,8 +304,10 @@ def handle_keys(snake_object: Snake) -> None:
             # Обновление направления движения змейки.
             if event.key in DIRECTION_CONTROL_BUTTONS:
                 snake_object.update_direction(
-                    NEW_DIRECTIONS.get((snake_object.direction, event.key),
-                                       snake_object.direction)
+                    NEW_DIRECTIONS.get(
+                        (snake_object.direction, event.key),
+                        snake_object.direction
+                    )
                 )
             # Обновление скорости движения змейки.
             elif event.key in ACCELERATION_CONTROL_BUTTONS:
@@ -331,7 +322,8 @@ def main():
     apple = Apple(hold_positions=snake.positions)
     wrong_product = WrongProduct(
         body_color=WRONG_PRODUCT_COLOR,
-        hold_positions=[*snake.positions, apple.position])
+        hold_positions=[*snake.positions, apple.position]
+    )
 
     global update_title_information
     update_title_information = True
