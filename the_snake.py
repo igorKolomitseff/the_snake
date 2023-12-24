@@ -204,14 +204,17 @@ class Snake(GameObject):
         """
         self.direction = new_direction
 
-    def update_speed(self, new_speed: int) -> None:
+    def update_speed(self, acceleration: int) -> None:
         """Обновляет скорость движения объекта "Змейка".
 
         Параметры:
-            new_speed: Новая скорость объекта "Змейка".
+            acceleration: Ускорение движения объекта "Змейка".
         """
-        if self.MIN_SNAKE_SPEED <= new_speed <= self.MAX_SNAKE_SPEED:
-            self.speed = new_speed
+        if (
+            self.MIN_SNAKE_SPEED <= self.speed + acceleration
+            and self.speed + acceleration <= self.MAX_SNAKE_SPEED
+        ):
+            self.speed = self.speed + acceleration
             global update_title_information
             update_title_information = True
 
@@ -307,7 +310,7 @@ def handle_keys(snake_object: Snake) -> None:
             # Обновление скорости движения змейки.
             elif event.key in ACCELERATION_CONTROL_BUTTONS:
                 snake_object.update_speed(
-                    snake_object.speed + SPEED_ACCELERATIONS[event.key]
+                    SPEED_ACCELERATIONS[event.key]
                 )
 
 
