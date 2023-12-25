@@ -322,16 +322,12 @@ def main():
     wrong_product = WrongProduct(
         hold_positions=[*snake.positions, apple.position]
     )
-
     screen.fill(BOARD_BACKGROUND_COLOR)
     pg.display.flip()
     apple.draw()
     wrong_product.draw()
-    snake.draw()
-
     while True:
         clock.tick(snake.speed)
-
         global update_title_information
         if update_title_information:
             pg.display.set_caption(TITLE.format(
@@ -348,16 +344,13 @@ def main():
                 [*snake.positions, wrong_product.position]
             )
             apple.draw()
-
         elif snake.get_head_position() == wrong_product.position:
             snake.reset_situation = True
             wrong_product.randomize_position(
                 [*snake.positions, apple.position]
             )
-
         if snake.length > snake.max_length:
             snake.update_max_length()
-
         if snake.reset_situation:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
