@@ -325,6 +325,9 @@ def main():
 
     screen.fill(BOARD_BACKGROUND_COLOR)
     pg.display.flip()
+    apple.draw()
+    wrong_product.draw()
+    snake.draw()
 
     while True:
         clock.tick(snake.speed)
@@ -344,6 +347,7 @@ def main():
             apple.randomize_position(
                 [*snake.positions, wrong_product.position]
             )
+            apple.draw()
 
         elif snake.get_head_position() == wrong_product.position:
             snake.reset_situation = True
@@ -357,10 +361,10 @@ def main():
         if snake.reset_situation:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
+            apple.draw()
+            wrong_product.draw()
             snake.reset_situation = False
         snake.move()
-        apple.draw()
-        wrong_product.draw()
         snake.draw()
         pg.display.update()
 
