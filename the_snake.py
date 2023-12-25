@@ -85,10 +85,7 @@ SNAKE_COLOR = (76, 187, 23)
 
 CENTER_SCREEN_POINT = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
 
-# Настройка игрового окна.
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-
-# Настройка времени.
 clock = pg.time.Clock()
 
 # Флаг для корректировки необходимости обновления информации в заголовке.
@@ -300,7 +297,6 @@ def handle_keys(snake_object: Snake) -> None:
             if event.key == pg.K_ESCAPE:
                 pg.quit()
                 sys.exit()
-            # Обновление направления движения змейки.
             if event.key in DIRECTION_CONTROL_BUTTONS:
                 snake_object.update_direction(
                     NEW_DIRECTIONS.get(
@@ -308,7 +304,6 @@ def handle_keys(snake_object: Snake) -> None:
                         snake_object.direction
                     )
                 )
-            # Обновление скорости движения змейки.
             elif event.key in ACCELERATION_CONTROL_BUTTONS:
                 snake_object.update_speed(
                     SPEED_ACCELERATIONS[event.key]
@@ -337,7 +332,6 @@ def main():
             ))
             update_title_information = False
         handle_keys(snake)
-
         if snake.get_head_position() == apple.position:
             snake.increase_length()
             apple.randomize_position(
