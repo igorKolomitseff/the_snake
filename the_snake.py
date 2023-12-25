@@ -133,7 +133,7 @@ class GameObject:
 
 
 class Snake(GameObject):
-    """Класс для представления объекта "Змейка" в игре "Змейка".
+    """Класс для представления объекта "Змейка".
 
     Атрибуты:
         length: Длина объекта "Змейка".
@@ -204,8 +204,9 @@ class Snake(GameObject):
             acceleration: Ускорение движения объекта "Змейка".
         """
         if (
-            self.MIN_SNAKE_SPEED <= self.speed + acceleration
-            and self.speed + acceleration <= self.MAX_SNAKE_SPEED
+            self.MIN_SNAKE_SPEED
+            <= self.speed + acceleration
+            <= self.MAX_SNAKE_SPEED
         ):
             self.speed = self.speed + acceleration
             global update_title_information
@@ -214,13 +215,11 @@ class Snake(GameObject):
     def increase_length(self):
         """Увеличивает длину объекта "Змейка."""
         self.length += 1
-
-    def update_max_length(self):
-        """Обновляет максимальную длину объекта "Змейка" за игру."""
-        self.max_length = self.length
-        self.max_length_speed = self.speed
-        global update_title_information
-        update_title_information = True
+        if self.length > self.max_length:
+            self.max_length = self.length
+            self.max_length_speed = self.speed
+            global update_title_information
+            update_title_information = True
 
     def draw(self) -> None:
         """Отрисовывает объект "Змейка" на экране."""
@@ -234,7 +233,7 @@ class Snake(GameObject):
 
 
 class Apple(GameObject):
-    """Класс для представления объекта "Яблоко" в игре "Змейка".
+    """Класс для представления объекта "Яблоко".
 
     Атрибуты:
         hold_positions: Занятые ячейки.
@@ -271,9 +270,7 @@ class Apple(GameObject):
 
 
 class WrongProduct(Apple):
-    """Класс для представления объекта "Неправильный продукт"
-    в игре "Змейка".
-    """
+    """Класс для представления объекта "Неправильный продукт"."""
 
     def __init__(
         self,
@@ -312,6 +309,7 @@ def handle_keys(snake_object: Snake) -> None:
 
 def main():
     """Запускает игру "Змейка"."""
+    global update_title_information
     snake = Snake()
     apple = Apple(hold_positions=snake.positions)
     wrong_product = WrongProduct(
@@ -323,7 +321,6 @@ def main():
     wrong_product.draw()
     while True:
         clock.tick(snake.speed)
-        global update_title_information
         if update_title_information:
             pg.display.set_caption(TITLE.format(
                 max_length=snake.max_length,
@@ -343,8 +340,6 @@ def main():
             wrong_product.randomize_position(
                 [*snake.positions, apple.position]
             )
-        if snake.length > snake.max_length:
-            snake.update_max_length()
         if snake.reset_situation:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
