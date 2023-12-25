@@ -218,8 +218,8 @@ class Snake(GameObject):
         """Увеличивает длину объекта "Змейка."""
         self.length += 1
 
-    def update_max_length_record(self):
-        """Обновляет рекорд длины объекта "Змейка"."""
+    def update_max_length(self):
+        """Обновляет максимальную длину объекта "Змейка" за игру."""
         self.max_length = self.length
         self.max_length_speed = self.speed
         global update_title_information
@@ -352,7 +352,7 @@ def main():
             )
 
         if snake.length > snake.max_length:
-            snake.update_max_length_record()
+            snake.update_max_length()
 
         if snake.reset_situation:
             snake.reset()
