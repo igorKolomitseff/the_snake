@@ -33,6 +33,7 @@
 
 ## Как развернуть проект
 1. Клонируйте репозиторий и перейдите в директорию the_snake
+```bash
 git git@github.com:igorKolomitseff/the_snake.git
 cd the_snake
 ```
